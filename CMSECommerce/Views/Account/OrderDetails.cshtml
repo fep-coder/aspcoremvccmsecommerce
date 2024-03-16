@@ -1,0 +1,54 @@
+﻿@model OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Order #" + Model.Order.Id + " details";
+}
+
+<h1>Order #@Model.Order.Id details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+                <td>
+                    @item.ProductName
+                </td>
+                <td>
+                    <img src="/media/products/@item.Image" width="100" alt="" />
+                </td>
+                <td>
+                    @item.Price.ToString("C2")
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+                <td>
+                    @((item.Price * item.Quantity).ToString("C2"))
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <td><b>Placed on:</b></td>
+            <td>@Model.Order.DateTime</td>
+        </tr>
+        <tr>
+            <td><b>Grand total:</b></td>
+            <td>@Model.Order.GrandTotal.ToString("C2")</td>
+        </tr>
+        <tr>
+            <td><b>Shipped:</b></td>
+            <td>@Html.DisplayFor(modelItem => Model.Order.Shipped)</td>
+        </tr>
+    </tbody>
+</table>

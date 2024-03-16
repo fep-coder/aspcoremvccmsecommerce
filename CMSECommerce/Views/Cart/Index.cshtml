@@ -1,0 +1,68 @@
+﻿@model CartViewModel
+
+@{
+    ViewData["Title"] = "Cart Overview";
+}
+
+@if (Model.CartItems.Count > 0)
+{
+
+
+    <h1>Cart Overview</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Image</th>
+                <th>Quantity</th>
+                <th></th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td class="align-middle">@item.ProductName</td>
+                    <td class="align-middle">
+                        <img src="/media/products/@item.Image" width="100" alt="" />
+                    </td>
+                    <td class="align-middle">@item.Quantity</td>
+                    <td class="align-middle">
+                        <a asp-action="Add" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary">+</a>
+                        <a asp-action="Decrease" asp-route-id="@item.ProductId" class="btn btn-sm btn-info">-</a>
+                        <a asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger">Remove</a>
+                    </td>
+                    <td class="align-middle">@item.Price.ToString("C2")</td>
+                    <td class="align-middle">@Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity * x.Price).ToString("C2")</td>
+                </tr>
+            }
+
+            <tr>
+                <td class="text-end" colspan="6"><b>Grand Total:</b> @Model.GrandTotal.ToString("C2")</td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="6">
+                    <a asp-asp-controller="Cart" asp-action="Clear" class="btn btn-danger">Clear Cart</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Orders" asp-action="Create" class="d-inline">
+                            <button class="btn btn-primary">Checkout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="badge text-bg-info">You must be logged in to check out!</span>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+}
+else
+{
+    <h3 class="display-4 text-center">Your cart is empty.</h3>
+}
